@@ -48,7 +48,7 @@ const css = `
   .nav-logo { display: flex; align-items: center; gap: 12px; }
   .nav-logo-text { font-family: 'Barlow Condensed', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--white); letter-spacing: 0.02em; }
   .nav-logo-text span { color: var(--blue); }
-  .nav-logo img { height: 56px; width: auto; display: block; }
+  .nav-logo img { height: 100px; width: auto; display: block; }
   .nav-links { display: flex; gap: 36px; list-style: none; align-items: center; }
   .nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.04em; transition: color 0.2s; cursor: pointer; }
   .nav-links a:hover { color: var(--blue); }
@@ -105,9 +105,9 @@ const css = `
   /* HERO IMAGE PANEL */
   .hero-img-panel { position: relative; z-index: 2; animation: fadeUp 0.9s 0.2s ease both; height: 580px; }
   .hero-img-main { width: 100%; height: 100%; object-fit: cover; border-radius: 24px; display: block; }
-  .hero-img-overlay { position: absolute; inset: 0; border-radius: 24px; background: linear-gradient(to top, rgba(0,37,80,0.6) 0%, transparent 50%); }
+  .hero-img-overlay { position: absolute; inset: 0; border-radius: 24px 0 0 24px; background: linear-gradient(to top, rgba(0,37,80,0.6) 0%, transparent 50%); }
   .hero-badge-card {
-    position: absolute; bottom: 28px; left: 24px; right: 24px;
+    position: absolute; bottom: 28px; left: 24px; right: 5%;
     background: rgba(255,255,255,0.12); backdrop-filter: blur(16px);
     border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 20px 24px;
     display: flex; align-items: center; justify-content: space-between;
@@ -226,7 +226,7 @@ const css = `
   .footer-logo { display: flex; align-items: center; gap: 10px; }
   .footer-logo-text { font-family: 'Barlow Condensed', sans-serif; font-size: 1.4rem; font-weight: 700; color: white; }
   .footer-logo-text span { color: var(--blue); }
-  .footer-logo img { height: 56px; width: auto; display: block; }
+  .footer-logo img { height: 100px; width: auto; display: block; }
   .footer-col h4 { font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; font-weight: 700; color: white; margin-bottom: 20px; letter-spacing: 0.08em; text-transform: uppercase; }
   .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
   .footer-col a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.87rem; transition: color 0.2s; }
@@ -328,7 +328,8 @@ const css = `
   }
   @media (max-width: 600px) {
     section { padding: 60px 5%; }
-    .hero { padding: 90px 5% 50px; }
+    .hero { padding: 90px 0 50px 0; }
+    .hero-content { padding-left: 5%; padding-right: 5%; }
     .footer-grid { grid-template-columns: 1fr; }
     .hero-stats { gap: 24px; flex-wrap: wrap; }
     .why-images { grid-template-columns: 1fr; }
@@ -420,7 +421,7 @@ function Navbar() {
   return (
     <nav className="ef-nav" id="ef-navbar" ref={ref}>
       <div className="nav-logo">
-        <img src="logo_white_transparent.png" alt="Engineer Flow" />
+        <img src="logo.png" alt="Engineer Flow" />
       </div>
       <ul className="nav-links">
         {[["#services", "Services"], ["#how", "How It Works"], ["#why", "Why Us"], ["#coverage", "Coverage"], ["#reviews", "Reviews"], ["#contact", "Contact"]].map(([href, label]) => (
@@ -470,7 +471,7 @@ function Hero() {
       <div className="hero-img-panel">
         <img
           className="hero-img-main"
-          src="https://th.bing.com/th/id/R.315cb30848db958442b870bdbc81efea?rik=P8yopvGONAlWGg&pid=ImgRaw&r=0"
+          src="hero2.jpeg"
           alt="Gas Safe engineer inspecting a boiler"
           loading="eager"
         />
@@ -692,13 +693,13 @@ function WhyUs() {
       <div className="why-inner">
         <div className="why-images">
           <div className="why-img-main">
-            <img src="https://t4.ftcdn.net/jpg/09/66/35/85/360_F_966358535_rcaaZ0NFW6dmtgwGv5tHeEUiAUk1iODi.jpg" alt="Engineer inspecting boiler system" loading="lazy" />
+            <img src="hero.jpg" alt="Engineer inspecting boiler system" loading="lazy" />
           </div>
           <div className="why-img-small">
-            <img src="https://cypressei.com/wp-content/uploads/2023/11/Types-of-Environmental-Engineering.jpg" alt="Engineer working on central heating" loading="lazy" />
+            <img src="hero3.avif" alt="Engineer working on central heating" loading="lazy" />
           </div>
           <div className="why-img-small">
-            <img src="https://civildigital.com/wp-content/uploads/2023/09/AdobeStock_629354044.jpg" alt="Gas boiler close up" loading="lazy" />
+            <img src="hero4.webp" alt="Gas boiler close up" loading="lazy" />
           </div>
         </div>
 
@@ -812,13 +813,10 @@ function Footer() {
       <div className="footer-grid">
         <div className="footer-brand">
           <div className="footer-logo">
-            <img src="logo_white_transparent.png" alt="Engineer Flow" />
+            <img src="logo.png" alt="Engineer Flow" />
           </div>
           <p>Gas Safe registered boiler engineers dispatched to your home across the UK. Fast, reliable and fully guaranteed.</p>
-          <div className="gas-safe">
-            <IconShield color="#7cc8ff" size={14} />
-            Gas Safe Registered — Licence No. XXXXXXX
-          </div>
+          
         </div>
 
         <div className="footer-col">
@@ -856,6 +854,7 @@ function Footer() {
 
       <div className="footer-bottom">
         <span>© 2026 Engineer Flow Ltd. All rights reserved.</span>
+        
       </div>
     </footer>
   );
