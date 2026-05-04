@@ -50,6 +50,16 @@ const css = `
   .nav-logo-text span { color: var(--blue); }
   .nav-logo img { height: 100px; width: auto; display: block; }
   .nav-links { display: flex; gap: 36px; list-style: none; align-items: center; }
+  .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; background: none; border: none; z-index: 1001; }
+  .nav-hamburger span { display: block; width: 24px; height: 2px; background: white; border-radius: 2px; transition: all 0.3s; }
+  .nav-hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+  .nav-hamburger.active span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+  .nav-links.mobile-open { display: flex !important; position: fixed; top: 72px; left: 0; right: 0; bottom: 0; background: rgba(0,26,64,0.98); backdrop-filter: blur(20px); flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 40px; gap: 0; z-index: 998; animation: slideDown 0.3s ease; }
+  .nav-links.mobile-open li { width: 100%; text-align: center; }
+  .nav-links.mobile-open a { display: block; padding: 16px 0; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .nav-links.mobile-open .nav-cta { margin-top: 16px; display: inline-block !important; width: auto; padding: 12px 32px; }
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
   .nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.04em; transition: color 0.2s; cursor: pointer; }
   .nav-links a:hover { color: var(--blue); }
   .nav-cta { background: var(--blue); color: var(--white) !important; padding: 10px 24px; border-radius: 6px; transition: background 0.2s, transform 0.2s !important; }
@@ -103,8 +113,8 @@ const css = `
   .hero-stat span { font-size: 0.8rem; color: rgba(255,255,255,0.5); letter-spacing: 0.04em; text-transform: uppercase; }
 
   /* HERO IMAGE PANEL */
-  .hero-img-panel { position: relative; z-index: 2; animation: fadeUp 0.9s 0.2s ease both; height: 580px; }
-  .hero-img-main { width: 100%; height: 100%; object-fit: cover; border-radius: 24px; display: block; }
+  .hero-img-panel { position: relative; z-index: 2; animation: fadeUp 0.9s 0.2s ease both; height: 580px; display: block; }
+  .hero-img-main { width: 100%; height: 100%; object-fit: cover; border-radius: 24px; display: block; visibility: visible; opacity: 1; }
   .hero-img-overlay { position: absolute; inset: 0; border-radius: 24px 0 0 24px; background: linear-gradient(to top, rgba(0,37,80,0.6) 0%, transparent 50%); }
   .hero-badge-card {
     position: absolute; bottom: 28px; left: 24px; right: 5%;
@@ -337,7 +347,7 @@ const css = `
     .why-images { grid-template-columns: 1fr; }
     .why-img-main { grid-column: 1; }
     .ef-nav { height: 64px; padding: 6px 5%; }
-    .nav-logo img { height: 60px !important; }
+    .nav-logo img { height: 48px !important; }
   }
 `;
 
@@ -396,12 +406,13 @@ function scrollTo(id) {
   window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - navH - 20, behavior: "smooth" });
 }
 
-function NavLink({ href, children, className }) {
+function NavLink({ href, children, className, onClick }) {
   const handleClick = (e) => {
     if (href.startsWith("#")) {
       e.preventDefault();
       if (href !== "#") scrollTo(href);
     }
+    if (onClick) onClick();
   };
   return (
     <a href={href} className={className} onClick={handleClick}>
@@ -414,25 +425,43 @@ function NavLink({ href, children, className }) {
 
 function Navbar() {
   const ref = useRef(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     const handler = () => ref.current?.classList.toggle("scrolled", window.scrollY > 60);
     window.addEventListener("scroll", handler);
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const closeMenu = () => setMenuOpen(false);
+
+  const navLinks = [["#services", "Services"], ["#how", "How It Works"], ["#why", "Why Us"], ["#coverage", "Coverage"], ["#reviews", "Reviews"], ["#contact", "Contact"]];
+
   return (
     <nav className="ef-nav" id="ef-navbar" ref={ref}>
       <div className="nav-logo">
         <img src="logo.png" alt="Engineer Flow" />
       </div>
-      <ul className="nav-links">
-        {[["#services", "Services"], ["#how", "How It Works"], ["#why", "Why Us"], ["#coverage", "Coverage"], ["#reviews", "Reviews"], ["#contact", "Contact"]].map(([href, label]) => (
+
+      <button 
+        className={`nav-hamburger ${menuOpen ? 'active' : ''}`} 
+        onClick={toggleMenu}
+        aria-label="Toggle menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul className={`nav-links ${menuOpen ? 'mobile-open' : ''}`}>
+        {navLinks.map(([href, label]) => (
           <li key={href}>
-            <NavLink href={href}>{label}</NavLink>
+            <NavLink href={href} onClick={closeMenu}>{label}</NavLink>
           </li>
         ))}
         <li>
-          <NavLink href="#book" className="nav-cta">Book Now</NavLink>
+          <NavLink href="#book" className="nav-cta" onClick={closeMenu}>Book Now</NavLink>
         </li>
       </ul>
     </nav>
